@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Izabelli · CRM Estética</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: elegante e premium, no mesmo padrão do CRM BY INGRID
+   IDEA: o painel de uma clínica de estética de alto padrão + o cartão fidelidade
+   PICTURE: meta do mês com ritmo e gráfico; barras de validade de cada tratamento
+   COLOUR and TYPE: marfim, branco, preto quente, rosé profundo e metais dos níveis; Playfair + Inter + Cormorant no logo
+   LAYOUT: coluna única de app, navegação inferior, fichas em folha deslizante */
+:root{--bg:#f5f2ee;--card:#fff;--line:#e8e2da;--ink:#1c1719;--mut:#7a6f6c;--soft:#f6f2ee;
+--acc:#9e4d5a;--accbg:#f7e7e9;--ok:#4f6f45;--okbg:#ecf1e6;--warn:#b5761b;--warnbg:#fcf1df;--red:#b23f3b;--redbg:#f8e3e1;--r:22px}
+*{box-sizing:border-box;min-width:0;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;overflow-x:clip}
+button,input,select,textarea{font:inherit;color:inherit}
+.demo{background:var(--ink);color:#f3ece8;font-size:12.5px;text-align:center;padding:7px 12px}
+.demo b{color:#e9a9b3;letter-spacing:.5px}
+#login{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+#login[hidden]{display:none}.lgbox{width:100%;max-width:380px}
+.sync{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);font-size:12px;color:var(--mut);z-index:16;pointer-events:none}
+.demo button{background:none;border:0;color:#fff;text-decoration:underline;font-size:12.5px;cursor:pointer;min-height:28px}
+.hbtn.add{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600}
+.addbig{width:100%;margin-bottom:12px;min-height:52px;font-size:16px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.hd{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px}
+.logo{line-height:1;flex:none}
+.logo .lg{display:flex;align-items:center;gap:10px;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:31px;letter-spacing:.5px}
+.logo .lg i{width:1px;height:26px;background:var(--ink)}
+.logo .lg span:last-child{font-size:17px;letter-spacing:3px}
+.logo small{display:block;font-size:8.5px;letter-spacing:2.4px;white-space:nowrap;color:var(--mut);margin-top:6px;font-weight:500}
+.hbtn{white-space:nowrap;flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer;color:var(--mut);min-height:40px}
+.wrap{max-width:900px;margin:0 auto;padding:22px 18px 140px}
+.eyebrow{font-size:12px;letter-spacing:2px;color:var(--mut);font-weight:600;text-transform:uppercase}
+h1{font-family:"Playfair Display",serif;font-size:34px;line-height:1.1;font-weight:700;margin:6px 0 6px;text-wrap:balance}
+.lead{color:var(--mut);font-size:15.5px;margin-bottom:18px}
+h2{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;margin:28px 0 12px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+h2 button{font:600 13px Inter,sans-serif;color:var(--acc);background:none;border:0;cursor:pointer;min-height:36px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:14px}
+.card h3{font-size:19px;font-weight:700}
+.sub{color:var(--mut);font-size:14px}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:10px;padding:6px 11px;font-size:13px;font-weight:600;white-space:nowrap;flex:none}
+.b-warn{background:var(--warnbg);color:var(--warn)}.b-ok{background:var(--okbg);color:var(--ok)}.b-red{background:var(--redbg);color:var(--red)}.b-acc{background:var(--accbg);color:var(--acc)}
+.big{font-size:clamp(36px,10vw,46px);font-weight:800;letter-spacing:-1.5px;margin-top:18px;font-variant-numeric:tabular-nums;line-height:1.1}
+.of{color:var(--mut);font-size:16px;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.of button{border:0;background:none;color:var(--acc);font-weight:600;font-size:13px;cursor:pointer;text-decoration:underline;min-height:32px}
+.prog{position:relative;height:12px;background:#efe7e1;border-radius:99px;margin:18px 0 8px}
+.prog .f{height:100%;background:var(--acc);border-radius:99px}
+.prog .tick{position:absolute;top:-6px;width:2px;height:24px;background:var(--ink)}
+.tiny{font-size:13px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:14px}
+.box{background:var(--soft);border-radius:16px;padding:13px 16px}
+.box .l{font-size:13.5px;color:var(--mut)}.box .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.box.wide{grid-column:1/-1}
+.fig{position:relative;height:170px;margin-top:18px}.fig svg{position:absolute;inset:0;width:100%;height:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--mut);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:16px;height:0;border-top:2px solid}
+.list{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.it{display:flex;align-items:center;gap:13px;padding:15px 16px;border-top:1px solid var(--line)}
+.it:first-child{border-top:0}
+.click{cursor:pointer}
+.grow{flex:1}
+.nm{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sm{font-size:13.5px;color:var(--mut)}
+.time{font-family:"Playfair Display",serif;font-size:26px;font-weight:700;width:70px;flex:none;line-height:1;font-variant-numeric:tabular-nums}
+.av{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:600;color:#fff;font-size:15px}
+.empty{padding:16px;color:var(--mut);font-size:14.5px}
+.pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.p-ok{background:var(--okbg);color:var(--ok)}.p-warn{background:var(--warnbg);color:var(--warn)}.p-red{background:var(--redbg);color:var(--red)}.p-acc{background:var(--accbg);color:var(--acc)}
+.tier{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;vertical-align:middle}
+.tier::before{content:"";width:6px;height:6px;transform:rotate(45deg);background:rgba(255,255,255,.85)}
+.btn{border:1px solid var(--line);background:#fff;border-radius:14px;min-height:44px;padding:10px 16px;font-weight:600;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;color:var(--ink)}
+.btn.s{min-height:36px;padding:6px 12px;font-size:13.5px;border-radius:10px}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.wa{background:#e6f4ea;border-color:#cfe8d6;color:#23743a}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,textarea{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;font-size:16px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--ink)}
+label.f{display:block;font-size:13px;color:var(--mut);margin:12px 0 5px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}
+.seg{display:inline-flex;max-width:100%;overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px;gap:2px;margin:4px 0 14px}
+.seg button{border:0;background:none;padding:8px 14px;border-radius:10px;cursor:pointer;color:#4a4043;white-space:nowrap;flex:none;font-size:14px;min-height:36px}
+.seg button.on{background:var(--ink);color:#fff}
+.days{display:flex;gap:8px;overflow-x:auto;padding:2px 18px 10px;margin:0 -18px 6px;scroll-snap-type:x mandatory}
+.day{flex:none;width:62px;border:1px solid var(--line);background:#fff;border-radius:16px;padding:9px 4px;text-align:center;cursor:pointer;scroll-snap-align:start}
+.day small{display:block;font-size:12px;color:var(--mut);text-transform:capitalize}
+.day b{display:block;font-size:21px;font-weight:700;line-height:1.2}
+.day i{display:block;font-style:normal;font-size:11px;color:var(--acc);font-weight:600;height:14px}
+.day.on{background:var(--ink);border-color:var(--ink);color:#fff}.day.on small,.day.on i{color:#e9c6cc}
+.bars .b{margin:12px 0}.bars .bl{display:flex;justify-content:space-between;gap:8px;font-size:14px;margin-bottom:5px}
+.bt{height:9px;background:var(--soft);border-radius:99px;overflow:hidden}.bf{height:100%;background:var(--acc);border-radius:99px}
+.vbar{height:9px;background:#efe7e1;border-radius:99px;position:relative;margin:9px 0 4px}
+.vbar .f{height:100%;border-radius:99px}
+.vbar .m{position:absolute;top:-5px;width:2px;height:19px;background:var(--ink);opacity:.55}
+.vleg{display:flex;justify-content:space-between;gap:6px;font-size:12.5px;color:var(--mut)}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.loyal{border-radius:var(--r);padding:20px;color:#fff;margin-top:14px;position:relative;overflow:hidden}
+.loyal::after{content:"";position:absolute;right:-34px;top:-34px;width:140px;height:140px;transform:rotate(45deg);border:1.5px solid rgba(255,255,255,.3);border-radius:16px}
+.loyal .lv{font-family:"Playfair Display",serif;font-size:30px;font-weight:700;line-height:1}
+.loyal .pt{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.loyal .tr{height:8px;background:rgba(255,255,255,.3);border-radius:99px;margin:12px 0 5px}.loyal .tr i{display:block;height:100%;background:#fff;border-radius:99px}
+.loyal .sm{color:#fff;opacity:.88}
+.tiers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:6px}
+.tc{border-radius:18px;padding:14px;color:#fff}
+.tc b{display:block;font-size:28px;line-height:1.15;font-weight:800}.tc span{font-size:13px;opacity:.9}
+.rules{display:grid;gap:10px}
+.rule{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;border-top:5px solid}
+.rule h3{font-size:17px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.rule ul{margin:8px 0 0 18px;font-size:14.5px}
+.prz{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.prz:first-child{border-top:0}
+pre.msg{white-space:pre-wrap;font:14.5px/1.5 Inter,sans-serif;background:#efeae2;border-radius:14px;padding:14px}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:18;padding-bottom:env(safe-area-inset-bottom)}
+nav .in{max-width:900px;margin:0 auto;display:flex}
+nav button{flex:1;background:none;border:0;padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:3px;color:#aaa1a0;font-size:12px;cursor:pointer}
+nav svg{width:24px;height:24px}
+nav button.on{color:var(--ink);font-weight:700}
+nav .dot{position:relative;display:flex}nav .dot i{position:absolute;top:-4px;right:-10px;background:var(--red);color:#fff;font-style:normal;font-size:10px;font-weight:700;border-radius:99px;padding:0 5px}
+.fab{position:fixed;right:max(18px,calc(50% - 432px));bottom:94px;background:var(--acc);color:#fff;border:0;border-radius:16px;padding:15px 24px;font-weight:600;font-size:16px;cursor:pointer;z-index:15;box-shadow:0 8px 24px rgba(158,77,90,.35)}
+.bg{position:fixed;inset:0;background:rgba(28,23,25,.45);z-index:40;display:none;align-items:flex-end;justify-content:center}
+.bg.open{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom))}
+@media(min-width:700px){.bg{align-items:center}.sheet{border-radius:24px}}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sh h1{font-size:27px;margin:0}
+.x{background:none;border:0;font-size:30px;line-height:1;color:var(--mut);cursor:pointer;min-width:44px;min-height:44px}
+.hist{border-left:2px solid var(--accbg);margin:6px 0 0 6px;padding-left:14px}
+.hist>div{padding:8px 0;position:relative}
+.hist>div::before{content:"";position:absolute;left:-20px;top:15px;width:10px;height:10px;border-radius:50%;background:var(--acc)}
+.note{background:var(--warnbg);border-radius:14px;padding:11px 13px;font-size:14px;margin-top:10px}
+.toast{position:fixed;left:50%;top:92px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+@media(max-width:600px){h1{font-size:31px}.time{font-size:23px;width:58px}.it{gap:11px;padding:14px}.it .btn.s{padding:6px 10px}.tiers{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.card{padding:18px}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="demo" id="demo" hidden><b>DEMONSTRAÇÃO</b> · dados de exemplo · <button id="zerar">apagar exemplos e começar</button></div>
+<header><div class="hd"><div class="logo"><div class="lg"><span>Izabelli</span><i></i><span>ESTÉTICA</span></div><small>HARMONIZAÇÃO FACIAL</small></div><button class="hbtn add" id="hbtn">+ Paciente</button></div></header>
+<main class="wrap" id="app"></main>
+<div id="login" hidden><form id="lgForm" class="lgbox"><div class="logo" style="margin-bottom:26px"><div class="lg"><span>Izabelli</span><i></i><span>ESTÉTICA</span></div><small>HARMONIZAÇÃO FACIAL</small></div>
+<h1 style="font-size:28px">Entrar</h1><p class="sub">Acesso restrito da clínica.</p>
+<label class="f">E-mail</label><input name="email" type="email" autocomplete="username" required>
+<label class="f">Senha</label><input name="senha" type="password" autocomplete="current-password" required>
+<button class="btn dark addbig" style="margin-top:18px" id="lgBtn">Entrar</button><p class="tiny" id="lgErr" style="color:var(--red)"></p></form></div>
+<button class="fab" id="fab">+ Agendar</button>
+<nav><div class="in">
+<button data-v="painel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2"/></svg>Painel</button>
+<button data-v="agenda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Agenda</button>
+<button data-v="pac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.4.8 2.2 2.6 2.5 4.7"/></svg>Pacientes</button>
+<button data-v="trat"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.8 1.8M9.5 2.5h5"/></svg><i id="nRet" hidden></i></span>Retornos</button>
+<button data-v="clube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6.5 4h11l3 5-8.5 11L3.5 9z"/><path d="M3.5 9h17M12 20 9 9l3-5 3 5z"/></svg>Fidelidade</button>
+</div></nav>
+<div class="bg" id="bg"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+{
+// ====== CONFIGURAÇÃO DO SUPABASE ======
+const SB_URL='COLE_AQUI_A_PROJECT_URL';
+const SB_KEY='COLE_AQUI_A_ANON_KEY';
+// ======================================
+const ONLINE=SB_URL.startsWith('https');
+const sb=ONLINE&&window.supabase?window.supabase.createClient(SB_URL,SB_KEY):null;
+const TIPOS=[
+ {n:'Toxina botulínica (botox)',min:120,max:180,v:1200},{n:'Harmonização facial (full face)',min:365,max:540,v:5000},
+ {n:'Preenchimento labial',min:270,max:365,v:1500},{n:'Preenchimento de olheiras',min:365,max:540,v:1800},
+ {n:'Preenchimento de mandíbula e queixo',min:365,max:540,v:2800},{n:'Rinomodelação',min:365,max:540,v:2000},
+ {n:'Bioestimulador de colágeno',min:365,max:540,v:2200},{n:'Fios de PDO',min:180,max:365,v:1800},
+ {n:'Skinbooster',min:30,max:45,v:900},{n:'Microagulhamento',min:30,max:45,v:450},{n:'Limpeza de pele',min:30,max:45,v:180},{n:'Avaliação',min:0,max:0,v:0}];
+const TD=Object.fromEntries(TIPOS.map(t=>[t.n,t]));
+const BOTOX=TIPOS[0].n;
+const NIV=[
+ {n:'Bronze',min:0,c:'#9c6239',b:['1 ponto a cada R$ 1 gasto','Mensagem e mimo de aniversário','Lembrete de retorno']},
+ {n:'Prata',min:2000,c:'#78828c',b:['Tudo do Bronze','5% off em limpeza de pele e skinbooster','Prioridade na agenda']},
+ {n:'Ouro',min:5000,c:'#a6802b',b:['Tudo do Prata','10% off no mês do aniversário','Revisão de botox sem custo','Kit de skincare pós-procedimento']},
+ {n:'Diamante',min:10000,c:'#2b6782',b:['Tudo do Ouro','15% off no mês do aniversário','1 limpeza de pele grátis por semestre','Horários exclusivos e novidades em primeira mão']}];
+const PREMIOS=[{n:'Limpeza de pele',p:2000},{n:'R$ 250 de desconto',p:3500},{n:'Sessão de skinbooster',p:6000}];
+const IND_PTS=300,IND_META=3;
+const KEY='iza-crm-v3';
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const NOW=new Date(),today=iso(NOW);
+const off=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const add=(s,n)=>{const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return iso(d)};
+const diff=(a,b)=>Math.round((new Date(a+'T12:00')-new Date(b+'T12:00'))/864e5);
+const br=s=>{const[y,m,d]=s.split('-');return d+'/'+m+'/'+y};
+const brs=s=>{const[y,m,d]=s.split('-');return d+'/'+m};
+const brm=s=>{const[y,m,d]=s.split('-');return d+'/'+m+'/'+y.slice(2)};
+const MES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const SEM=['dom','seg','ter','qua','qui','sex','sáb'];
+const R=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const N=v=>Math.round(v).toLocaleString('pt-BR');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,10));
+const ini=n=>n.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const first=n=>n.split(' ')[0];
+const dur=d=>d>=60?Math.round(d/30)+' meses':d+(d===1?' dia':' dias');
+const faixa=t=>t.min>=60?`${Math.round(t.min/30)} a ${Math.round(t.max/30)} meses`:`${t.min} a ${t.max} dias`;
+const ICO={dn:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 7l10 10M17 9v8H9"/></svg>',up:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M9 7h8v8"/></svg>'};
+
+function sample(){
+ const P=[['Camila Rocha','96991234501','1992-03-14','Prefere horários pela manhã.',null],['Juliana Mendes','96991234502','1988-11-29','',null],
+ ['Fernanda Lima','96991234503','1995-07-02','Confirmar se não está gestante antes de qualquer procedimento.',0],['Patrícia Souza','96991234504','1979-11-08','Pele sensível, histórico de herpes labial.',null],
+ ['Larissa Costa','96991234505','1998-01-21','',3],['Renata Alves','96991234506','1985-05-30','',1],['Bianca Nunes','96991234507','1990-09-12','',1],
+ ['Aline Ferreira','96991234508','1983-11-25','',3],['Carla Dias','96991234509','1987-02-17','',3],['Mariana Teixeira','96991234510','1981-06-04','',null],
+ ['Thaís Moura','96991234511','1994-12-19','',null],['Gabriela Pinto','96991234512','1991-08-08','',0],['Vanessa Lopes','96991234513','1989-04-27','',1]];
+ const pac=P.map(([nome,tel,nasc,obs])=>({id:uid(),nome,tel,nasc,obs,ind:''}));
+ P.forEach((x,i)=>{if(x[4]!==null)pac[i].ind=pac[x[4]].id});
+ const T=TIPOS.map(t=>t.n),dd=NOW.getDate();
+ const dm=k=>-Math.max(0,dd-Math.min(k,dd)); // offset para o dia k deste mês
+ const pr=(i,o,t,det,valor,pago=true)=>({id:uid(),pid:pac[i].id,data:off(o),tipo:T[t],det,valor,pago});
+ const proc=[pr(0,-128,0,'Testa, glabela e pés de galinha · 50U',1200),pr(0,-200,2,'1 ml · ácido hialurônico',1500),pr(0,-250,0,'50U',1200),pr(0,-160,8,'Face total',900),
+ pr(1,-118,0,'Glabela e testa · 40U',1100),pr(1,-40,8,'Face total',900),pr(1,-330,2,'1 ml',1500),pr(1,-60,3,'1 ml',1800),
+ pr(2,-60,10,'',180),pr(2,-1,11,'Avaliação para harmonização',0),
+ pr(3,-95,6,'2 frascos · face e pescoço',2200),pr(3,-300,4,'4 ml',2800),pr(3,-200,1,'Protocolo completo',5000),pr(3,-170,0,'Full face · 60U',1400),
+ pr(4,dm(9),0,'Glabela · 20U',700),pr(4,dm(9),2,'0,5 ml',900,false),pr(5,-40,7,'Terço médio',1800),pr(5,dm(21),8,'',900),
+ pr(6,dm(15),3,'1 ml',1800),pr(6,-35,10,'',180),pr(7,dm(20),5,'',2000,false),pr(7,-130,0,'Full face · 60U',1400),
+ pr(8,-190,0,'Glabela · 30U',1200),pr(8,-380,2,'1 ml',1500),
+ pr(9,dm(3),1,'Protocolo completo',5000),pr(10,dm(6),0,'Glabela e testa · 40U',1200),pr(10,dm(6),2,'1 ml',1500),
+ pr(11,dm(10),6,'2 frascos',2200),pr(12,dm(12),0,'Testa · 30U',1100),pr(12,dm(18),8,'',900)];
+ const ag=[[0,0,'09:00',0],[5,0,'10:30',6],[1,0,'14:00',8],[4,0,'16:00',11],[3,1,'09:30',6],[6,2,'15:00',10],[2,4,'11:00',2],[9,3,'10:00',8]]
+ .map(([i,o,hora,t])=>({id:uid(),pid:pac[i].id,data:off(o),hora,tipo:T[t]}));
+ const res=[{id:uid(),pid:pac[3].id,data:off(-50),premio:'Limpeza de pele',pts:2000}];
+ return{pac,proc,ag,res,meta:25000,demo:true};
+}
+let S;if(ONLINE)S={pac:[],proc:[],ag:[],res:[],meta:25000};else try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.pac)S=sample();
+S.res=S.res||[];S.meta=S.meta||25000;
+const save=()=>{if(ONLINE)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cleanRow=(t,r)=>{const o={...r};if(t==='pacientes'){o.nasc=o.nasc||null;o.ind=o.ind||null}return o};
+let pend=0;const syncMark=()=>{let e=document.getElementById('sync');if(!e){e=document.createElement('div');e.id='sync';e.className='sync';document.body.appendChild(e)}e.textContent=pend?'Salvando…':''};
+async function dbRun(fn){if(!sb)return;pend++;syncMark();try{const{error}=await fn();if(error)throw error}catch(e){toast('Não salvou: '+(e.message||'sem conexão')+'. Tente de novo.')}pend--;syncMark()}
+const up=(t,r)=>dbRun(()=>sb.from(t).upsert(cleanRow(t,r)));
+const del=(t,id)=>dbRun(()=>sb.from(t).delete().eq('id',id));
+async function loadAll(){
+ const ts=['pacientes','procedimentos','agendamentos','resgates','config'];
+ const rs=await Promise.all(ts.map(t=>sb.from(t).select('*').range(0,9999)));
+ const err=rs.find(r=>r.error);if(err){toast('Erro ao carregar: '+err.error.message);return false}
+ const [a,b,c,d,e]=rs.map(r=>r.data);
+ S.pac=a.map(p=>({...p,nasc:p.nasc||'',ind:p.ind||'',obs:p.obs||'',tel:p.tel||''}));
+ S.proc=b.map(x=>({...x,valor:+x.valor||0,det:x.det||''}));S.ag=c;S.res=d.map(x=>({...x,pts:+x.pts}));
+ S.meta=+(e.find(x=>x.id==='main')||{}).meta||25000;S.demo=false;render();return true}
+let userEmail='';
+async function startOnline(){
+ const lg=document.getElementById('login'),er=document.getElementById('lgErr');
+ if(!sb){lg.hidden=false;er.textContent='Não foi possível conectar. Verifique a internet e recarregue a página.';return}
+ const{data}=await sb.auth.getSession();
+ if(data.session){userEmail=data.session.user.email;lg.hidden=true;await loadAll()}else lg.hidden=false;
+ document.getElementById('lgForm').onsubmit=async ev=>{ev.preventDefault();ev.stopPropagation();const v=Object.fromEntries(new FormData(ev.target));const b=document.getElementById('lgBtn');b.textContent='Entrando…';er.textContent='';
+  const{data:dd,error}=await sb.auth.signInWithPassword({email:v.email.trim(),password:v.senha});b.textContent='Entrar';
+  if(error){er.textContent=error.message.includes('Invalid')?'E-mail ou senha incorretos.':error.message;return}
+  userEmail=dd.user.email;lg.hidden=true;await loadAll()}}
+const P=id=>S.pac.find(p=>p.id===id)||{nome:'—',tel:'',id:''};
+const wa=(tel,msg)=>'https://wa.me/55'+String(tel).replace(/\D/g,'')+'?text='+encodeURIComponent(msg);
+
+// fidelidade
+const gasto12=pid=>S.proc.filter(x=>x.pid===pid&&diff(today,x.data)<=365).reduce((s,x)=>s+x.valor,0);
+const nivelI=pid=>{const g=gasto12(pid);let i=0;NIV.forEach((n,k)=>{if(g>=n.min)i=k});return i};
+const conv=pid=>S.pac.filter(p=>p.ind===pid&&S.proc.some(x=>x.pid===p.id&&x.valor>0&&x.pago));
+const pts=pid=>Math.floor(S.proc.filter(x=>x.pid===pid&&x.pago).reduce((s,x)=>s+x.valor,0))+IND_PTS*conv(pid).length-S.res.filter(r=>r.pid===pid).reduce((s,r)=>s+r.pts,0);
+const tierTag=i=>`<span class="tier" style="background:${NIV[i].c}">${NIV[i].n}</span>`;
+const avatar=p=>`<div class="av" style="background:${NIV[nivelI(p.id)].c}">${ini(p.nome)}</div>`;
+
+// tratamentos
+function trats(pid){
+ const out=[],p=P(pid),mine=S.proc.filter(x=>x.pid===pid);
+ for(const t of TIPOS){
+  if(!t.max)continue;
+  const last=mine.filter(x=>x.tipo===t.n).sort((a,b)=>b.data.localeCompare(a.data))[0];
+  if(!last)continue;
+  const e=diff(today,last.data),ag=S.ag.filter(a=>a.pid===pid&&a.tipo===t.n&&a.data>=today).sort((a,b)=>a.data.localeCompare(b.data))[0];
+  let st,c,txt;
+  if(e>t.max){st='Vencido';c='p-red';txt=`venceu há ${dur(e-t.max)}`}
+  else if(e>=t.min){st='Hora de voltar';c='p-acc';txt=`vence em ${dur(t.max-e)}`}
+  else if(e>=t.min-30){st='Vence em breve';c='p-warn';txt=`voltar daqui a ${dur(t.min-e)}`}
+  else{st='Em dia';c='p-ok';txt=`voltar daqui a ${dur(t.min-e)}`}
+  out.push({p,t,last,e,ag,st,c,txt,de:add(last.data,t.min),ate:add(last.data,t.max),resta:t.max-e});
+  if(t.n===BOTOX&&e>=10&&e<=21&&!S.ag.some(a=>a.pid===pid&&a.data>=last.data))
+   out.push({p,t:{n:'Revisão do botox (15 dias)',min:15,max:21},last,e,st:'Hora de voltar',c:'p-acc',txt:'revisão de 15 dias',de:add(last.data,15),ate:add(last.data,21),resta:21-e,rev:true});
+ }
+ return out;
+}
+const allTrats=()=>S.pac.flatMap(p=>trats(p.id)).sort((a,b)=>a.resta-b.resta);
+const precisa=r=>!r.ag&&(r.st==='Vencido'||r.st==='Hora de voltar');
+const msgTrat=r=>{const n=first(r.p.nome);
+ if(r.rev)return `Oi, ${n}! Aqui é a Izabelli. Já fazem 15 dias da sua aplicação de botox, vamos marcar a revisão pra ver se ficou tudo certinho?`;
+ return `Oi, ${n}! Aqui é a Izabelli. Seu ${r.t.n.toLowerCase()} foi feito em ${br(r.last.data)}, há ${dur(r.e)}. O resultado costuma durar de ${faixa(r.t)}, então ${r.e>r.t.max?'já passou da hora de renovar':'está na hora de renovar pra manter tudo lindo'}. Quer que eu reserve um horário pra você esta semana?`};
+function vbar(r){const pct=Math.min(r.e/r.t.max,1)*100,mk=r.t.min/r.t.max*100;
+ const col={'p-red':'var(--red)','p-acc':'var(--acc)','p-warn':'var(--warn)','p-ok':'var(--ok)'}[r.c];
+ return `<div class="vbar"><div class="f" style="width:${pct}%;background:${col}"></div><div class="m" style="left:${mk}%"></div></div>
+ <div class="vleg"><span>Feito ${brm(r.last.data)}</span><span>Voltar ${brs(r.de)} a ${brs(r.ate)}</span></div>`}
+function tratItem(r,showName=true){
+ return `<div class="it" style="align-items:flex-start">${showName?avatar(r.p):''}<div class="grow">
+ ${showName?`<div class="nm click" data-pac="${r.p.id}">${esc(r.p.nome)}</div>`:''}
+ <div class="${showName?'sm':'nm'}">${esc(r.t.n)} · há ${dur(r.e)}</div>${vbar(r)}
+ <div class="row" style="margin-top:8px"><span class="pill ${r.c}">${r.st}</span><span class="sm">${r.txt}</span></div>
+ <div class="row" style="margin-top:9px">${r.ag?`<span class="pill p-ok">Agendado ${brs(r.ag.data)} às ${r.ag.hora}</span>`:
+ `<a class="btn s wa" target="_blank" href="${wa(r.p.tel,msgTrat(r))}">Chamar no WhatsApp</a><button class="btn s" data-agp="${r.p.id}" data-agt="${esc(r.rev?'Avaliação':r.t.n)}">Agendar</button>`}</div></div></div>`}
+function agItem(a){const p=P(a.pid);return `<div class="it" style="align-items:flex-start"><div class="time">${a.hora}</div>
+ <div class="grow"><div class="nm click" data-pac="${p.id}">${esc(p.nome)}</div><div class="sm">${esc(a.tipo)}</div><div style="margin-top:4px">${tierTag(nivelI(p.id))}</div>
+ <div class="row" style="margin-top:10px">${a.data<=today?`<button class="btn s dark" data-conc="${a.id}">Concluir</button>`:''}
+ <a class="btn s wa" target="_blank" href="${wa(p.tel,`Oi, ${first(p.nome)}! Aqui é a Izabelli. Passando para confirmar seu horário de ${a.tipo.toLowerCase()} ${a.data===today?'hoje':'dia '+brs(a.data)} às ${a.hora}. Posso confirmar?`)}">Confirmar</a>
+ <button class="btn s" data-canc="${a.id}">Desmarcar</button></div></div></div>`}
+
+let view='painel',q='',tF='voltar',nF=-1,dSel=today;
+const app=document.getElementById('app');
+const toast=t=>{const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000)};
+
+function mesInfo(){
+ const mes=today.slice(0,7),dd=NOW.getDate(),dm=new Date(NOW.getFullYear(),NOW.getMonth()+1,0).getDate();
+ const ps=S.proc.filter(x=>x.data.startsWith(mes)&&x.data<=today);
+ const fat=ps.reduce((s,x)=>s+x.valor,0),vend=ps.filter(x=>x.valor>0);
+ const dia=Array(dm+1).fill(0);ps.forEach(x=>dia[+x.data.slice(8)]+=x.valor);
+ const acc=[];let s=0;for(let i=1;i<=dd;i++){s+=dia[i];acc.push(s)}
+ return{mes,dd,dm,fat,vend,acc,proj:fat/dd*dm,ritmo:S.meta*dd/dm};
+}
+function vPainel(){
+ const m=mesInfo(),pct=Math.round(m.fat/S.meta*100),acima=m.fat>=m.ritmo,falta=Math.max(S.meta-m.fat,0),rest=m.dm-m.dd;
+ const ag=S.ag.filter(a=>a.data===today).sort((a,b)=>a.hora.localeCompare(b.hora));
+ const vol=allTrats().filter(precisa),pend=S.proc.filter(x=>!x.pago&&x.valor>0),vp=pend.reduce((s,x)=>s+x.valor,0);
+ const by={};m.vend.forEach(x=>by[x.tipo]=(by[x.tipo]||0)+x.valor);const bt=Object.entries(by).sort((a,b)=>b[1]-a[1]),mx=bt[0]?.[1]||1;
+ const novas=S.pac.filter(p=>{const f=S.proc.filter(x=>x.pid===p.id).map(x=>x.data).sort()[0];return f&&f.startsWith(m.mes)}).length;
+ const mm=today.slice(5,7),aniv=S.pac.filter(p=>p.nasc&&p.nasc.slice(5,7)===mm);
+ const anivMsg=p=>{const i=nivelI(p.id),perk=i>=3?'15% de desconto':i>=2?'10% de desconto':'um mimo especial';return `Feliz aniversário, ${first(p.nome)}! Que seu novo ciclo seja lindo. Como cliente ${NIV[i].n} do Clube Izabelli, você tem ${perk} em qualquer procedimento este mês. Um beijo, Izabelli`};
+ return `<div class="eyebrow">Visão geral · ${MES[NOW.getMonth()]}</div><h1>A clínica hoje</h1><p class="lead">Agenda, retornos, fidelidade e faturamento num lugar só.</p>
+ <div class="card"><div class="ctop"><div><h3>Meta do mês</h3><div class="sub">Procedimentos realizados</div></div>
+ <span class="badge ${acima?'b-ok':'b-warn'}">${acima?ICO.up+' Acima do ritmo':ICO.dn+' Abaixo do ritmo'}</span></div>
+ <div class="big">${R(m.fat)}</div><div class="of"><span>de ${R(S.meta)} · ${pct}%</span><button id="eMeta">editar meta</button></div>
+ <div class="prog"><div class="f" style="width:${Math.min(pct,100)}%"></div><div class="tick" style="left:${m.dd/m.dm*100}%"></div></div>
+ <div class="tiny">O tracinho mostra onde a clínica deveria estar hoje (dia ${m.dd} de ${m.dm}).</div>
+ <div class="grid2"><div class="box"><div class="l">Faltam</div><div class="v">${R(falta)}</div></div><div class="box"><div class="l">Por dia, até o fim</div><div class="v">${R(rest?falta/rest:falta)}</div></div>
+ <div class="box wide"><div class="l">No ritmo atual, o mês fecha em</div><div class="v" style="color:${m.proj>=S.meta?'var(--ok)':'var(--warn)'};font-size:23px">${R(m.proj)} <span class="tiny" style="font-weight:400">(${Math.round(m.proj/S.meta*100)}% da meta)</span></div></div></div>
+ <div class="fig" id="chart"></div>
+ <div class="legend"><span><i style="border-color:var(--ink)"></i>Realizado</span><span><i style="border-color:#a39894;border-top-style:dashed"></i>Ritmo ideal</span><span><i style="border-color:var(--acc)"></i>Meta</span></div></div>
+ <div class="card"><h3>Resumo</h3><div class="grid2">
+ <div class="box"><div class="l">Atendimentos hoje</div><div class="v">${ag.length}</div></div><div class="box"><div class="l">Precisam voltar</div><div class="v" style="color:${vol.length?'var(--red)':'inherit'}">${vol.length}</div></div>
+ <div class="box"><div class="l">Ticket médio</div><div class="v">${R(m.vend.length?m.fat/m.vend.length:0)}</div></div><div class="box"><div class="l">A receber</div><div class="v" style="color:${vp?'var(--warn)':'inherit'}">${R(vp)}</div></div>
+ <div class="box"><div class="l">Procedimentos no mês</div><div class="v">${m.vend.length}</div></div><div class="box"><div class="l">Pacientes novas</div><div class="v">${novas}</div></div></div></div>
+ <h2>Agenda de hoje <button data-go="agenda">Ver agenda</button></h2><div class="list">${ag.map(agItem).join('')||'<div class="empty">Nenhum atendimento marcado para hoje.</div>'}</div>
+ ${vol.length?`<h2>Chamar para retorno <button data-go="trat">Ver ${vol.length}</button></h2><div class="list">${vol.slice(0,3).map(r=>tratItem(r)).join('')}</div>`:''}
+ <h2>Por procedimento</h2><div class="card bars" style="padding:8px 20px">${bt.map(([n,v])=>`<div class="b"><div class="bl"><span>${esc(n)}</span><b class="num">${R(v)}</b></div><div class="bt"><div class="bf" style="width:${v/mx*100}%"></div></div></div>`).join('')||'<div class="empty">Sem procedimentos neste mês.</div>'}</div>
+ <h2>Pagamentos pendentes</h2><div class="list">${pend.map(x=>`<div class="it"><div class="grow"><div class="nm">${esc(P(x.pid).nome)}</div><div class="sm">${esc(x.tipo)} · ${br(x.data)}</div></div><b class="num">${R(x.valor)}</b><button class="btn s dark" data-pago="${x.id}">Recebido</button></div>`).join('')||'<div class="empty">Tudo recebido.</div>'}</div>
+ ${ONLINE?`<p class="tiny" style="text-align:center;margin-top:28px">Conectada como ${esc(userEmail)} · <button id="sair" style="background:none;border:0;color:var(--acc);text-decoration:underline;cursor:pointer;min-height:32px">Sair</button></p>`:''}
+ ${aniv.length?`<h2>Aniversariantes de ${MES[NOW.getMonth()]}</h2><div class="list">${aniv.map(p=>`<div class="it">${avatar(p)}<div class="grow"><div class="nm">${esc(p.nome)}</div><div class="sm">Dia ${p.nasc.slice(8)} · ${NIV[nivelI(p.id)].n}</div></div><a class="btn s wa" target="_blank" href="${wa(p.tel,anivMsg(p))}">Parabéns</a></div>`).join('')}</div>`:''}`;
+}
+function drawChart(){
+ const el=document.getElementById('chart');if(!el)return;const m=mesInfo();
+ const draw=()=>{const W=el.clientWidth,H=el.clientHeight,pl=4,pr=8,pt=12,pb=20;
+  const top=Math.max(S.meta,m.proj,m.fat)*1.05,x=d=>pl+(d/m.dm)*(W-pl-pr),y=v=>pt+(1-v/top)*(H-pt-pb);
+  const line=m.acc.map((v,i)=>`${i?'L':'M'}${x(i+1).toFixed(1)},${y(v).toFixed(1)}`).join('');
+  const lx=x(m.dd),ly=y(m.fat);
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}"><line x1="${x(0)}" x2="${x(m.dm)}" y1="${y(S.meta)}" y2="${y(S.meta)}" stroke="var(--acc)" stroke-width="2.5"/>
+  <text x="${x(0)}" y="${y(S.meta)-6}" font-size="11.5" fill="var(--acc)" font-weight="600">Meta ${R(S.meta)}</text>
+  <line x1="${x(0)}" y1="${y(0)}" x2="${x(m.dm)}" y2="${y(S.meta)}" stroke="#a39894" stroke-width="2" stroke-dasharray="5 6"/>
+  <line x1="${lx}" y1="${ly}" x2="${x(m.dm)}" y2="${y(m.proj)}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="2 5" opacity=".5"/>
+  <path d="M${x(0)},${y(0)}${line.replace('M','L')}" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="${lx}" cy="${ly}" r="6" fill="var(--ink)" stroke="#fff" stroke-width="2.5"/>
+  <line x1="${x(0)}" x2="${x(m.dm)}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/>
+  <text x="${x(0)}" y="${H-4}" font-size="11.5" fill="var(--mut)">dia 1</text><text x="${x(m.dm)}" y="${H-4}" font-size="11.5" fill="var(--mut)" text-anchor="end">dia ${m.dm}</text></svg>`};
+ const ro=new ResizeObserver(draw);ro.observe(el);
+}
+function vAgenda(){
+ const days=[...Array(14)].map((_,i)=>off(i));
+ const ag=S.ag.filter(a=>a.data===dSel).sort((a,b)=>a.hora.localeCompare(b.hora));
+ const atras=S.ag.filter(a=>a.data<today).sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+ const ds=new Date(dSel+'T12:00');
+ return `<div class="eyebrow">Agenda</div><h1>${dSel===today?'Hoje':SEM[ds.getDay()]+', '+ds.getDate()+' de '+MES[ds.getMonth()]}</h1><p class="lead">${ag.length} atendimento${ag.length===1?'':'s'} marcado${ag.length===1?'':'s'}.</p>
+ <div class="days">${days.map(d=>{const n=S.ag.filter(a=>a.data===d).length,dt=new Date(d+'T12:00');return `<button class="day${d===dSel?' on':''}" data-day="${d}"><small>${d===today?'hoje':SEM[dt.getDay()]}</small><b>${dt.getDate()}</b><i>${n?n+' ag.':''}</i></button>`}).join('')}</div>
+ <div class="list">${ag.map(agItem).join('')||'<div class="empty">Nenhum atendimento neste dia. Toque em “+ Agendar”.</div>'}</div>
+ ${atras.length?`<h2>Não concluídos</h2><p class="sub" style="margin:-6px 0 10px">Horários que já passaram e ainda não foram registrados.</p><div class="list">${atras.map(a=>`<div class="it"><div class="grow"><div class="nm">${esc(P(a.pid).nome)}</div><div class="sm">${esc(a.tipo)} · ${brs(a.data)} às ${a.hora}</div></div><button class="btn s dark" data-conc="${a.id}">Concluir</button><button class="btn s" data-canc="${a.id}">Remover</button></div>`).join('')}</div>`:''}`;
+}
+function vPac(){
+ const l=S.pac.filter(p=>(p.nome+p.tel).toLowerCase().includes(q.toLowerCase())&&(nF<0||nivelI(p.id)===nF)).sort((a,b)=>a.nome.localeCompare(b.nome));
+ return `<div class="eyebrow">Pacientes · ${S.pac.length} cadastradas</div><h1>Carteira de pacientes</h1><p class="lead">Ficha, histórico, validade dos tratamentos e nível no clube.</p>
+ <button class="btn dark addbig" id="addPac">+ Cadastrar nova paciente</button>
+ <input id="busca" placeholder="Buscar por nome ou telefone" value="${esc(q)}" style="margin-bottom:12px">
+ <div class="seg"><button data-nf="-1" class="${nF<0?'on':''}">Todas</button>${NIV.map((n,i)=>`<button data-nf="${i}" class="${nF===i?'on':''}">${n.n}</button>`).join('')}</div>
+ <div class="list">${l.map(p=>{const ps=S.proc.filter(x=>x.pid===p.id).sort((a,b)=>b.data.localeCompare(a.data)),v=trats(p.id).filter(precisa).length;
+ return `<div class="it click" data-pac="${p.id}">${avatar(p)}<div class="grow"><div class="nm">${esc(p.nome)}</div>
+ <div class="sm">${ps[0]?esc(ps[0].tipo)+' · '+br(ps[0].data):'Sem procedimentos'}</div>${v?`<span class="pill p-red" style="margin-top:5px">${v} para renovar</span>`:''}</div>
+ <div style="text-align:right">${tierTag(nivelI(p.id))}<div class="sm num" style="margin-top:4px">${N(pts(p.id))} pts</div></div></div>`}).join('')||'<div class="empty">Ninguém encontrado.</div>'}</div>`;
+}
+function vTrat(){
+ const all=allTrats(),f={voltar:precisa,breve:r=>!r.ag&&r.st==='Vence em breve',ag:r=>!!r.ag,dia:r=>r.st==='Em dia',todos:()=>1};
+ const l=all.filter(f[tF]);
+ const b=(k,t)=>`<button data-tf="${k}" class="${tF===k?'on':''}">${t} (${all.filter(f[k]).length})</button>`;
+ return `<div class="eyebrow">Retornos · validade dos tratamentos</div><h1>Quem precisa voltar</h1><p class="lead">Quando foi feito, há quanto tempo, quando vence e a época certa de voltar. A barra enche até o vencimento; o tracinho marca quando o efeito começa a passar.</p>
+ <div class="seg">${b('voltar','Precisam voltar')}${b('breve','Vencem em 30 dias')}${b('ag','Agendados')}${b('dia','Em dia')}${b('todos','Todos')}</div>
+ <div class="list">${l.map(r=>tratItem(r)).join('')||'<div class="empty">Nenhum tratamento neste filtro.</div>'}</div>
+ <h2>Duração de cada procedimento</h2><div class="card" style="padding:8px 20px">${TIPOS.filter(t=>t.max).map(t=>`<div class="prz"><span>${t.n}</span><b class="num">${faixa(t)}</b></div>`).join('')}
+ <p class="tiny" style="padding:8px 0 10px">O botox também gera a revisão de 15 dias.</p></div>`;
+}
+function vClube(){
+ const cnt=NIV.map((n,i)=>S.pac.filter(p=>nivelI(p.id)===i).length);
+ const perto=S.pac.map(p=>{const i=nivelI(p.id);if(i===3)return null;const falta=NIV[i+1].min-gasto12(p.id);return falta<=1500?{p,i,falta}:null}).filter(Boolean).sort((a,b)=>a.falta-b.falta);
+ const rank=S.pac.map(p=>({p,c:conv(p.id).length,t:S.pac.filter(x=>x.ind===p.id).length})).filter(x=>x.t).sort((a,b)=>b.c-a.c||b.t-a.t);
+ const comPts=S.pac.map(p=>({p,pt:pts(p.id)})).filter(x=>x.pt>0).sort((a,b)=>b.pt-a.pt);
+ return `<div class="eyebrow">Fidelidade e indicação</div><h1>Clube Izabelli</h1><p class="lead">O nível depende do quanto a paciente investiu nos últimos 12 meses. Pontos viram prêmios e indicações viram pontos.</p>
+ <div class="tiers">${NIV.map((n,i)=>`<div class="tc" style="background:${n.c}"><span>${n.n}</span><b>${cnt[i]}</b><span>paciente${cnt[i]===1?'':'s'}</span></div>`).join('')}</div>
+ <h2>Perto de subir de nível</h2><div class="list">${perto.map(x=>`<div class="it">${avatar(x.p)}<div class="grow"><div class="nm click" data-pac="${x.p.id}">${esc(x.p.nome)}</div>
+ <div class="sm">${NIV[x.i].n} → ${NIV[x.i+1].n} · faltam ${R(x.falta)}</div></div>
+ <a class="btn s wa" target="_blank" href="${wa(x.p.tel,`Oi, ${first(x.p.nome)}! Aqui é a Izabelli. Você está pertinho do nível ${NIV[x.i+1].n} do Clube Izabelli: faltam só ${R(x.falta)}. No ${NIV[x.i+1].n} você ganha ${NIV[x.i+1].b.slice(1).join(', ').toLowerCase()}. Quer aproveitar e marcar seu próximo procedimento?`)}">Avisar</a></div>`).join('')||'<div class="empty">Ninguém perto de subir agora.</div>'}</div>
+ <h2>Campanha de pontos</h2><p class="sub" style="margin:-4px 0 12px">Avise quantos pontos a paciente tem e ofereça R$ ${CAMP_VAL} de desconto em qualquer procedimento fechado em até ${CAMP_DIAS} dias.</p>
+ <div class="list">${comPts.map(x=>`<div class="it">${avatar(x.p)}<div class="grow"><div class="nm click" data-pac="${x.p.id}">${esc(x.p.nome)}</div><div class="sm num">${N(x.pt)} pontos · ${NIV[nivelI(x.p.id)].n}</div></div>
+ <button class="btn s wa" data-pmsg="${x.p.id}">Enviar</button></div>`).join('')||'<div class="empty">Nenhuma paciente com pontos ainda.</div>'}</div>
+ <h2>Ranking de indicações</h2><div class="list">${rank.map((x,k)=>`<div class="it"><div class="time" style="width:30px">${k+1}</div>${avatar(x.p)}<div class="grow"><div class="nm click" data-pac="${x.p.id}">${esc(x.p.nome)}</div>
+ <div class="sm">${x.t} indicada${x.t>1?'s':''} · ${x.c} virou paciente · ${N(x.c*IND_PTS)} pts</div></div><span class="pill ${x.c>=IND_META?'p-ok':'p-acc'}">${Math.min(x.c,IND_META)}/${IND_META}</span></div>`).join('')||'<div class="empty">Nenhuma indicação ainda. Marque “Indicada por” no cadastro da paciente.</div>'}</div>
+ <h2>Regras do programa</h2><div class="rules">${NIV.map((n,i)=>`<div class="rule" style="border-top-color:${n.c}"><h3><span>${n.n}</span><span class="sm num">${i===0?'até '+R(NIV[1].min-1):(i<3?R(n.min)+' a '+R(NIV[i+1].min-1):'a partir de '+R(n.min))} em 12 meses</span></h3><ul>${n.b.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('')}
+ <div class="rule" style="border-top-color:var(--acc)"><h3>Indicação</h3><ul><li>Quem indica ganha ${IND_PTS} pontos quando a amiga faz o primeiro procedimento</li><li>A amiga indicada ganha 10% off no primeiro procedimento</li><li>A cada ${IND_META} indicações que viram pacientes: 1 limpeza de pele grátis</li></ul></div>
+ <div class="rule" style="border-top-color:var(--ink)"><h3>Prêmios com pontos</h3>${PREMIOS.map(z=>`<div class="prz"><span>${z.n}</span><b class="num">${N(z.p)} pts</b></div>`).join('')}<p class="tiny">Pontos valem por 12 meses.</p></div></div>
+ <h2>Mensagem para divulgar</h2><div class="card"><pre class="msg">${esc(msgClube())}</pre><button class="btn dark" id="copiar" style="margin-top:12px;width:100%">Copiar mensagem</button></div>`;
+}
+const msgClube=()=>`Chegou o Clube Izabelli ✨
+Agora cada procedimento vale pontos e benefícios:
+
+${NIV.map(n=>`${n.n}: ${n.b.filter(x=>!x.startsWith('Tudo')).join(', ').toLowerCase()}`).join('\n')}
+
+Indique uma amiga: ela ganha 10% off no primeiro procedimento e você ganha ${IND_PTS} pontos. A cada ${IND_META} amigas, uma limpeza de pele por nossa conta.
+
+Troque seus pontos por: ${PREMIOS.map(z=>`${z.n.toLowerCase()} (${N(z.p)} pts)`).join(', ')}.
+
+Me chama pra saber seu nível!`;
+function render(){
+ app.innerHTML={painel:vPainel,agenda:vAgenda,pac:vPac,trat:vTrat,clube:vClube}[view]();
+ if(view==='painel')drawChart();
+ const n=allTrats().filter(precisa).length,e=document.getElementById('nRet');e.hidden=!n;e.textContent=n;
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
+ document.getElementById('demo').hidden=!S.demo;
+ document.getElementById('fab').textContent=view==='pac'?'+ Nova paciente':'+ Agendar';
+ const bu=document.getElementById('busca');if(bu){bu.oninput=()=>{q=bu.value;const pos=bu.selectionStart;render();const nb=document.getElementById('busca');nb.focus();nb.setSelectionRange(pos,pos)}}
+}
+const bg=document.getElementById('bg'),sh=document.getElementById('sheet');
+const open=h=>{sh.innerHTML=h;bg.classList.add('open');sh.scrollTop=0};
+const close=()=>bg.classList.remove('open');
+bg.addEventListener('click',e=>{if(e.target===bg)close()});
+const top=t=>`<div class="sh"><h1>${t}</h1><button class="x" data-close aria-label="Fechar">×</button></div>`;
+const optT=sel=>TIPOS.map(t=>`<option${t.n===sel?' selected':''}>${t.n}</option>`).join('');
+const optP=(sel,none)=>(none?`<option value="">Ninguém</option>`:'')+S.pac.slice().sort((a,b)=>a.nome.localeCompare(b.nome)).map(p=>`<option value="${p.id}"${p.id===sel?' selected':''}>${esc(p.nome)}</option>`).join('');
+
+function fPac(id){const p=id?P(id):{};open(top(id?'Editar paciente':'Nova paciente')+`<form data-f="pac" data-id="${id||''}">
+ <label class="f">Nome completo</label><input name="nome" required value="${esc(p.nome)}"><div class="g2"><div><label class="f">WhatsApp (com DDD)</label><input name="tel" inputmode="tel" value="${esc(p.tel)}" placeholder="96 99999-9999"></div>
+ <div><label class="f">Nascimento</label><input type="date" name="nasc" value="${esc(p.nasc)}"></div></div>
+ <label class="f">Indicada por</label><select name="ind">${optP(p.ind,true)}</select>
+ <label class="f">Observações (alergias, saúde, preferências)</label><textarea name="obs" rows="3">${esc(p.obs)}</textarea>
+ <div class="row" style="margin-top:16px"><button class="btn dark grow">Salvar</button>${id?`<button type="button" class="btn" data-del="${id}" style="color:var(--red)">Excluir</button>`:''}</div></form>`)}
+function fAg(pid,tipo){open(top('Agendar')+`<form data-f="ag"><label class="f">Paciente</label><select name="pid" required>${optP(pid)}</select>
+ <label class="f">Procedimento</label><select name="tipo">${optT(tipo)}</select><div class="g2"><div><label class="f">Data</label><input type="date" name="data" value="${view==='agenda'?dSel:today}" required></div>
+ <div><label class="f">Hora</label><input type="time" name="hora" value="09:00" required></div></div>
+ <button class="btn dark" style="width:100%;margin-top:16px">Agendar</button>${!S.pac.length?'<p class="tiny" style="margin-top:8px">Cadastre uma paciente primeiro.</p>':''}</form>`)}
+function fProc(pid,tipo,agid){const t=TD[tipo]||TIPOS[0];open(top('Registrar procedimento')+`<form data-f="proc" data-ag="${agid||''}"><label class="f">Paciente</label><select name="pid">${optP(pid)}</select>
+ <label class="f">Procedimento</label><select name="tipo" id="selT">${optT(t.n)}</select><label class="f">Detalhes (região, unidades, ml, produto, lote)</label><input name="det" placeholder="Ex.: glabela e testa · 40U · lote 1234">
+ <div class="g2"><div><label class="f">Data</label><input type="date" name="data" value="${today}"></div><div><label class="f">Valor (R$)</label><input name="valor" inputmode="decimal" id="inV" value="${t.v}"></div></div>
+ <label style="display:flex;gap:10px;align-items:center;font-size:15px;min-height:44px;margin-top:8px"><input type="checkbox" name="pago" checked style="width:20px;height:20px"> Pagamento recebido</label>
+ <div class="note" id="volta" style="background:var(--accbg)"></div>
+ <button class="btn dark" style="width:100%;margin-top:14px">Salvar procedimento</button></form>`);
+ const s=document.getElementById('selT'),vt=document.getElementById('volta');
+ const upd=()=>{const x=TD[s.value];vt.hidden=!x.max;vt.textContent=x.max?`Dura de ${faixa(x)}. Retorno previsto entre ${br(add(today,x.min))} e ${br(add(today,x.max))}.`:''};
+ s.onchange=()=>{document.getElementById('inV').value=TD[s.value].v;upd()};upd()}
+const dLong=s=>{const d=new Date(s+'T12:00');return ['domingo','segunda','terça','quarta','quinta','sexta','sábado'][d.getDay()]+', '+brs(s)};
+const GANCHO={
+ 'Toxina botulínica (botox)':'Prepare-se para aquele olhar descansado e a pele lisinha que todo mundo vai notar, sem ninguém saber o porquê 😉',
+ 'Harmonização facial (full face)':'Vamos realçar o que você já tem de mais bonito, com um resultado natural e elegante. Você vai se olhar no espelho e se reconhecer, só que ainda mais linda.',
+ 'Preenchimento labial':'Lábios mais definidos e hidratados, do jeitinho que você sempre quis.',
+ 'Preenchimento de olheiras':'Chega de cara de cansada: vamos devolver o brilho do seu olhar.',
+ 'Preenchimento de mandíbula e queixo':'Contorno marcado e definido, pra você se apaixonar pelo seu perfil.',
+ 'Rinomodelação':'Um nariz mais harmônico, sem cirurgia e com resultado na hora.',
+ 'Bioestimulador de colágeno':'É o começo de uma pele mais firme e com viço, que melhora a cada semana.',
+ 'Fios de PDO':'Efeito lifting natural, com a pele mais firme e sustentada.',
+ 'Skinbooster':'Hidratação profunda pra aquele glow de pele saudável que dispensa filtro.',
+ 'Microagulhamento':'Renovação da pele pra uma textura mais lisa e uniforme.',
+ 'Limpeza de pele':'Um momento de cuidado só seu, pra sair com a pele leve e renovada.',
+ 'Avaliação':'Vou olhar seu rosto com calma e montar um plano feito sob medida pra você.'};
+const msgAg=a=>{const p=P(a.pid);return `Oi, ${first(p.nome)}! Aqui é a Izabelli 💗\n\nSeu horário está reservado: ${a.data===today?'hoje':dLong(a.data)} às ${a.hora}, ${a.tipo.toLowerCase()}.\n\n${GANCHO[a.tipo]||'Separei esse momento com muito carinho pra você.'}\n\nJá estou preparando tudo pra te receber. Te espero! ✨`};
+function msgSheet(titulo,sub,pid,msg,extra=''){const p=P(pid),temTel=String(p.tel||'').replace(/\D/g,'').length>=10;
+ open(top(titulo)+`<p class="sub">${sub}</p>
+ <label class="f">Mensagem para ${esc(first(p.nome))} (pode editar antes de enviar)</label><textarea id="msgTx" rows="10">${esc(msg)}</textarea>
+ ${temTel?`<a class="btn wa addbig" id="msgGo" target="_blank" style="margin-top:14px" href="${wa(p.tel,msg)}">Enviar no WhatsApp</a>`:`<div class="note">Essa paciente está sem WhatsApp cadastrado. <button class="btn s" data-ep="${pid}">Adicionar número</button></div>`}
+ <div class="row"><button class="btn grow" id="msgCopy">Copiar mensagem</button>${extra}</div>
+ <p class="tiny" style="margin-top:10px">O WhatsApp abre com a mensagem pronta; é só tocar em enviar.</p>`);
+ const tx=document.getElementById('msgTx'),go=document.getElementById('msgGo');tx.oninput=()=>{if(go)go.href=wa(p.tel,tx.value)}}
+const GPREMIO={
+ 'Limpeza de pele':'É um momento de cuidado só seu, pra sair com a pele leve, renovada e pronta pra brilhar.',
+ 'R$ 250 de desconto':'Que tal usar naquele procedimento que você está namorando há um tempo? É a desculpa perfeita pra se dar esse presente.',
+ 'Sessão de skinbooster':'Hidratação profunda pra aquele glow de pele saudável que dispensa filtro.'};
+const msgResg=r=>{const p=P(r.pid),i=nivelI(r.pid);return `Oi, ${first(p.nome)}! Aqui é a Izabelli 💗\n\nSeus pontos do Clube Izabelli viraram presente: você acabou de resgatar ${r.premio==='R$ 250 de desconto'?'R$ 250 de desconto':'uma '+r.premio.toLowerCase()}! 🎁\n\n${GPREMIO[r.premio]||'Separei esse mimo com muito carinho pra você.'}\n\nAgora é só me responder aqui com o melhor dia e horário que eu reservo tudo pra te receber ✨\n\nObrigada por ser cliente ${NIV[i].n} do Clube Izabelli. Você ainda tem ${N(pts(r.pid))} pontos guardados.`};
+function okResg(r){msgSheet('Prêmio resgatado ✓',`${esc(P(r.pid).nome)} · ${esc(r.premio)} · −${N(r.pts)} pontos`,r.pid,msgResg(r),`<button class="btn dark" data-agp="${r.pid}" data-agt="${r.premio==='Limpeza de pele'?'Limpeza de pele':r.premio==='Sessão de skinbooster'?'Skinbooster':''}">Agendar</button>`)}
+const CAMP_DIAS=10,CAMP_VAL=250;
+const msgPts=pid=>{const p=P(pid),pt=pts(pid),ate=add(today,CAMP_DIAS),ren=trats(pid).filter(precisa)[0];
+ return `Oi, ${first(p.nome)}! Aqui é a Izabelli 💗\n\nPassando pra te contar uma novidade boa: você tem ${N(pt)} pontos acumulados aqui com a gente no Clube Izabelli! ✨\n\nE como você é especial pra nós, preparei um presente: fechando qualquer procedimento comigo até ${dLong(ate)}, você ganha R$ ${CAMP_VAL} de desconto. 🎁\n\n${ren?`Inclusive, seu ${ren.t.n.toLowerCase().replace(/ \(.*\)/,'')} já está na hora de renovar, então é a oportunidade perfeita 😉`:'É a oportunidade perfeita pra fazer aquele procedimento que você está namorando há um tempo.'}\n\nVamos marcar? Me responde aqui que eu separo o melhor horário pra você.`};
+function okPts(pid){msgSheet('Avisar pontos',`${esc(P(pid).nome)} · ${N(pts(pid))} pontos · desconto de R$ ${CAMP_VAL} válido até ${br(add(today,CAMP_DIAS))}`,pid,msgPts(pid),`<button class="btn dark" data-agp="${pid}" data-agt="">Agendar</button>`)}
+function okAg(a){msgSheet('Agendado ✓',`${esc(P(a.pid).nome)} · ${esc(a.tipo)} · ${dLong(a.data)} às ${a.hora}`,a.pid,msgAg(a),`<button class="btn" data-close>Agora não</button>`)}
+function okPac(id){const p=P(id);msgSheet('Paciente cadastrada ✓','Agende o primeiro horário ou mande uma mensagem de boas-vindas.',id,
+ `Oi, ${first(p.nome)}! Aqui é a Izabelli, da Izabelli Estética. Que bom ter você por aqui! Salva meu número para receber os lembretes dos seus horários e as novidades do Clube Izabelli. 💗`,
+ `<button class="btn dark" data-agp="${id}" data-agt="">Agendar horário</button>`)}
+function fMeta(){open(top('Meta do mês')+`<form data-f="meta"><label class="f">Quanto a clínica quer faturar por mês (R$)</label><input name="meta" inputmode="numeric" value="${S.meta}" required><button class="btn dark" style="width:100%;margin-top:16px">Salvar meta</button></form>`)}
+function fResg(pid){const pt=pts(pid);open(top('Resgatar prêmio')+`<p class="sub">${esc(P(pid).nome)} tem <b class="num" style="color:var(--ink)">${N(pt)} pontos</b>.</p>
+ <div class="card" style="margin-top:12px;padding:6px 18px">${PREMIOS.map((z,i)=>`<div class="prz"><div><b>${z.n}</b><div class="sm num">${N(z.p)} pontos</div></div><button class="btn s dark" data-rz="${i}" data-rp="${pid}"${pt<z.p?' disabled':''}>${pt<z.p?'Faltam '+N(z.p-pt):'Resgatar'}</button></div>`).join('')}</div>`)}
+function ficha(id){const p=P(id),ps=S.proc.filter(x=>x.pid===id).sort((a,b)=>b.data.localeCompare(a.data)),tot=ps.reduce((s,x)=>s+x.valor,0);
+ const ags=S.ag.filter(a=>a.pid===id&&a.data>=today).sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+ const idade=p.nasc?Math.floor(diff(today,p.nasc)/365.25)+' anos':'';
+ const i=nivelI(id),g=gasto12(id),nx=NIV[i+1],pr=nx?Math.min((g-NIV[i].min)/(nx.min-NIV[i].min),1)*100:100;
+ const indic=S.pac.filter(x=>x.ind===id),cv=conv(id).length,quem=p.ind?P(p.ind):null;
+ const tr=trats(id).sort((a,b)=>a.resta-b.resta),rs=S.res.filter(r=>r.pid===id);
+ open(top(esc(p.nome))+`<p class="sub">${esc(p.tel)}${idade?' · '+idade:''} · cliente desde ${ps.length?br(ps[ps.length-1].data):'—'}${quem?` · indicada por <span class="click" data-pac="${quem.id}" style="text-decoration:underline">${esc(quem.nome)}</span>`:''}</p>
+ ${p.obs?`<div class="note">${esc(p.obs)}</div>`:''}
+ <div class="loyal" style="background:${NIV[i].c}"><div class="row" style="justify-content:space-between"><div><div class="sm">Clube Izabelli</div><div class="lv">${NIV[i].n}</div></div>
+ <div style="text-align:right"><div class="pt">${N(pts(id))}</div><div class="sm">pontos</div></div></div>
+ <div class="tr"><i style="width:${pr}%"></i></div><div class="sm">${nx?`${R(g)} em 12 meses · faltam ${R(nx.min-g)} para ${nx.n}`:`${R(g)} em 12 meses · nível máximo`}</div></div>
+ <div class="row" style="margin-top:12px"><a class="btn wa" target="_blank" href="${wa(p.tel,'Oi, '+first(p.nome)+'! Aqui é a Izabelli.')}">WhatsApp</a><button class="btn dark" data-agp="${id}" data-agt="">Agendar</button><button class="btn" data-np="${id}">+ Procedimento</button><button class="btn" data-rg="${id}">Resgatar</button><button class="btn wa" data-pmsg="${id}">Avisar pontos</button><button class="btn" data-ep="${id}">Editar</button></div>
+ <div class="grid2" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="box"><div class="l">Investido</div><div class="v" style="font-size:17px">${R(tot)}</div></div><div class="box"><div class="l">Indicações</div><div class="v" style="font-size:17px">${cv}/${indic.length}</div></div><div class="box"><div class="l">Próximo</div><div class="v" style="font-size:17px">${ags[0]?brs(ags[0].data):'—'}</div></div></div>
+ <h2>Tratamentos e validade</h2>${tr.length?`<div class="list">${tr.map(r=>tratItem(r,false)).join('')}</div>`:'<p class="sub">Nenhum tratamento com prazo ainda.</p>'}
+ ${indic.length?`<h2>Indicou</h2><div class="list">${indic.map(x=>{const ok=S.proc.some(y=>y.pid===x.id&&y.valor>0&&y.pago);return `<div class="it click" data-pac="${x.id}">${avatar(x)}<div class="grow"><div class="nm">${esc(x.nome)}</div></div><span class="pill ${ok?'p-ok':'p-warn'}">${ok?'+'+IND_PTS+' pts':'ainda não veio'}</span></div>`}).join('')}</div>
+ <p class="tiny" style="margin-top:8px">${cv>=IND_META?`Já ganhou ${Math.floor(cv/IND_META)} limpeza${Math.floor(cv/IND_META)>1?'s':''} de pele grátis por indicação.`:`Faltam ${IND_META-cv} indicaç${IND_META-cv>1?'ões':'ão'} para ganhar uma limpeza de pele.`}</p>`:''}
+ ${rs.length?`<h2>Prêmios resgatados</h2><div class="list">${rs.map(r=>`<div class="it"><div class="grow"><div class="nm">${esc(r.premio)}</div><div class="sm">${br(r.data)}</div></div><span class="num sm">−${N(r.pts)} pts</span><button class="btn s wa" data-rmsg="${r.id}">Mensagem</button></div>`).join('')}</div>`:''}
+ <h2>Histórico</h2>${ps.length?`<div class="hist">${ps.map(x=>`<div><b>${esc(x.tipo)}</b> <span class="sm">· ${br(x.data)}</span><br><span class="sm">${esc(x.det)}${x.det?' · ':''}${x.valor?R(x.valor):'sem custo'}${x.valor&&!x.pago?' · <span class="pill p-warn">a receber</span>':''}</span> <button class="btn s" data-dp="${x.id}" style="min-height:28px;padding:2px 8px;margin-left:4px">remover</button></div>`).join('')}</div>`:'<p class="sub">Ainda sem procedimentos.</p>'}`)}
+
+document.addEventListener('click',e=>{
+ const t=e.target.closest('button,[data-pac]');if(!t)return;const d=t.dataset;
+ if(t.matches('nav button')){view=d.v;render();scrollTo(0,0);return}
+ if('close' in d)return close();
+ if(d.go){view=d.go;render();scrollTo(0,0);return}
+ if(t.id==='fab')return view==='pac'?fPac():fAg();
+ if(t.id==='hbtn'||t.id==='addPac')return fPac();
+ if(t.id==='sair'){sb.auth.signOut().then(()=>location.reload());return}
+ if(t.id==='zerar'){if(d.ok){S={pac:[],proc:[],ag:[],res:[],meta:S.meta};save();render();toast('Pronto, tudo zerado. Agora é só cadastrar as pacientes.')}else{d.ok=1;t.textContent='toque de novo para confirmar';setTimeout(()=>{if(t.isConnected){delete t.dataset.ok;t.textContent='apagar exemplos e começar'}},4000)}return}
+ if(t.id==='eMeta')return fMeta();
+ if(t.id==='msgCopy'){const v=document.getElementById('msgTx').value;try{navigator.clipboard.writeText(v).then(()=>toast('Mensagem copiada'),()=>toast('Selecione o texto e copie'))}catch(x){toast('Selecione o texto e copie')}return}
+ if(t.id==='copiar'){try{navigator.clipboard.writeText(msgClube()).then(()=>toast('Mensagem copiada'),()=>toast('Selecione o texto e copie'))}catch(x){toast('Selecione o texto e copie')}return}
+ if(d.day){dSel=d.day;return render()}
+ if(d.tf){tF=d.tf;return render()}
+ if(d.nf!==undefined){nF=+d.nf;return render()}
+ if(d.pac)return ficha(d.pac);
+ if(d.agp)return fAg(d.agp,d.agt);
+ if(d.np)return fProc(d.np);
+ if(d.ep)return fPac(d.ep);
+ if(d.rg)return fResg(d.rg);
+ if(d.rz){const z=PREMIOS[+d.rz];if(pts(d.rp)<z.p)return;const nr={id:uid(),pid:d.rp,data:today,premio:z.n,pts:z.p};S.res.push(nr);save();up('resgates',nr);render();return okResg(nr)}
+ if(d.pmsg)return okPts(d.pmsg);
+ if(d.rmsg){const r=S.res.find(x=>x.id===d.rmsg);if(r)okResg(r);return}
+ if(d.conc){const a=S.ag.find(x=>x.id===d.conc);return fProc(a.pid,a.tipo,a.id)}
+ if(d.canc){S.ag=S.ag.filter(x=>x.id!==d.canc);save();del('agendamentos',d.canc);render();return toast('Horário desmarcado')}
+ if(d.pago){const pp=S.proc.find(x=>x.id===d.pago);pp.pago=true;save();up('procedimentos',pp);render();return toast('Pagamento registrado')}
+ if(d.dp){if(!d.ok){d.ok=1;t.textContent='confirmar?';return}const pid=S.proc.find(x=>x.id===d.dp).pid;S.proc=S.proc.filter(x=>x.id!==d.dp);save();del('procedimentos',d.dp);render();return ficha(pid)}
+ if(d.del){if(!d.ok){d.ok=1;t.textContent='Toque de novo para excluir';return}del('pacientes',d.del);S.pac=S.pac.filter(x=>x.id!==d.del);S.pac.forEach(x=>{if(x.ind===d.del)x.ind=''});S.proc=S.proc.filter(x=>x.pid!==d.del);S.ag=S.ag.filter(x=>x.pid!==d.del);S.res=S.res.filter(x=>x.pid!==d.del);save();close();render();return toast('Paciente excluída')}
+});
+const num=s=>parseFloat(String(s).replace(/\s|R\$/g,'').replace(/\.(?=\d{3})/g,'').replace(',','.'))||0;
+document.addEventListener('submit',e=>{
+ e.preventDefault();const f=e.target,v=Object.fromEntries(new FormData(f));let next=null;
+ if(f.dataset.f==='meta'){S.meta=num(v.meta)||S.meta;up('config',{id:'main',meta:S.meta});toast('Meta atualizada')}
+ if(f.dataset.f==='pac'){const o={nome:v.nome.trim(),tel:v.tel,nasc:v.nasc,obs:v.obs,ind:v.ind===f.dataset.id?'':v.ind};if(f.dataset.id){Object.assign(P(f.dataset.id),o);up('pacientes',P(f.dataset.id));toast('Paciente salva')}else{const np={id:uid(),...o};S.pac.push(np);up('pacientes',np);next=()=>okPac(np.id)}}
+ if(f.dataset.f==='ag'){if(!S.pac.length)return toast('Cadastre uma paciente primeiro');const na={id:uid(),pid:v.pid,data:v.data,hora:v.hora,tipo:v.tipo};S.ag.push(na);up('agendamentos',na);next=()=>okAg(na)}
+ if(f.dataset.f==='proc'){if(!S.pac.length)return toast('Cadastre uma paciente primeiro');const antes=nivelI(v.pid);
+  const npr={id:uid(),pid:v.pid,data:v.data,tipo:v.tipo,det:v.det,valor:num(v.valor),pago:!!v.pago};S.proc.push(npr);up('procedimentos',npr);
+  if(f.dataset.ag){S.ag=S.ag.filter(x=>x.id!==f.dataset.ag);del('agendamentos',f.dataset.ag)}const dep=nivelI(v.pid);toast(dep>antes?`${first(P(v.pid).nome)} subiu para ${NIV[dep].n}!`:'Procedimento registrado')}
+ save();close();render();if(next)next();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+render();
+if(ONLINE)startOnline();
+}
+</script>
+</body>
+</html>
